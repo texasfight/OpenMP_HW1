@@ -4,35 +4,36 @@
 #include <chrono>
 
 using namespace std::chrono;
+using std::vector;
 
 
-void initialize(float *array, int const size) {
+void initialize(vector<float> &array, int const size) {
     for(int i = 0; i < size; i++){
         for(int j = 0; j < size; j++){
-            *(array + i * size + j) = rand() / (float) RAND_MAX;
+            array[i * size + j] = rand() / (float) RAND_MAX;
         }
     }
 }
 
 
 
-void smooth(float const *input, float *output, int const size, float const a, float const b, float const c) {
+void smooth(vector<float> &input, vector<float> &output, int const size, float const a, float const b, float const c) {
     for (int i = 1; i < size - 1; i++) {
         for (int j = 1; j < size - 1; j++) {
-            *(output + i * size + j) =
-                    a * (*(input + (i - 1) * size + j - 1) + *(input + (i - 1) * size + j + 1) +
-                         *(input + (i + 1) * size + j + 1) + *(input + (i + 1) * size + j - 1)) +
-                    b * (*(input + (i - 1) * size + j - 0) + *(input + (i + 1) * size + j - 0) +
-                         *(input + (i - 0) * size + j - 1) + *(input + (i - 0) * size + j + 1)) +
-                    c * *(input + (i) * size + j);
+            output[i * size + j] =
+                    a * (input[(i - 1) * size + j - 1] + input[(i - 1) * size + j + 1] +
+                         input[(i + 1) * size + j + 1] + input[(i + 1) * size + j - 1]) +
+                    b * (input[(i - 1) * size + j] + input[(i + 1) * size + j] +
+                         input[(i) * size + j + 1] + input[(i) * size + j - 1]) +
+                    c *  input[i * size + j];
         }
     }
 }
 
-void count(float const *array, int const size, float const thresh, int &count) {
+void count(vector<float> const &array, int const size, float const thresh, int &count) {
     for(int i = 0; i < size; i++){
         for(int j = 0; j < size; j++){
-            if (*(array + i * size + j) < thresh) {
+            if (array[i * size + j] < thresh) {
                 count++;
             }
         }
@@ -51,13 +52,13 @@ int main() {
 
     // Allocate Arrays
     auto t1 = high_resolution_clock::now();
-    auto* x = new float[n * n];
+    vector<float> x(n*n);
     auto t2 = high_resolution_clock::now();;
     duration<float> alloc_x = t2 - t1;
 
 
     t1 = high_resolution_clock::now();
-    auto* y = new float[n * n];
+    vector<float> y(n*n);
     t2 = high_resolution_clock::now();
     duration<float> alloc_y = t2 - t1;
 
@@ -106,7 +107,7 @@ int main() {
 
     double resolution = (double) std::chrono::high_resolution_clock::period::num
                         / std::chrono::high_resolution_clock::period::den;
-    printf("Functions   --    Time [s]  --  Resolution = %E\n", resolution);
+    printf("Functions   --    Time [s]  --  Resolution = %.2E\n", resolution);
     printf("Alloc-X     --    %f\n", alloc_x.count());
     printf("Alloc-Y     --    %f\n", alloc_y.count());
     printf("Init-X      --    %f\n", init_x.count());
