@@ -56,7 +56,7 @@ void count(vector<float> const &array, long const size, float const thresh, long
 
 
 
-long main() {
+int main() {
     // Declaration of variables
     const float a = 0.05;
     const float b = 0.1;
@@ -71,7 +71,7 @@ long main() {
 
 #pragma omp parallel
     {
-        prlongf("This is thread %d\n", omp_get_thread_num());
+        printf("This is thread %d\n", omp_get_thread_num());
     }
 
     // Allocate Arrays
@@ -91,7 +91,7 @@ long main() {
 
     threads = omp_get_max_threads();
 
-    prlongf("Total threads: %d\n", threads);
+    printf("Total threads: %d\n", threads);
 
     // Initialize array, x
     t5 = omp_get_wtime();
@@ -99,7 +99,7 @@ long main() {
     t6 = omp_get_wtime();
     init_x = t6 - t5;
 
-    prlongf("Initialized x\n");
+    printf("Initialized x\n");
 
 
     // Smooth x and initialize array y
@@ -108,7 +108,7 @@ long main() {
     t8 = omp_get_wtime();
     smooth_time = t8 - t7;
 
-    prlongf("Smoothed y\n");
+    printf("Smoothed y\n");
 
     // Count elements under threshold
     t9 = omp_get_wtime();
@@ -126,30 +126,30 @@ long main() {
 
     std::cout << "Summary\n";
     std::cout << "-------\n";
-    prlongf("Number of threads                        : %d\n", threads);
-    prlongf("Number of elements in a row/column       : %d\n", n);
-    prlongf("Number of inner elements in a row/column : %d\n", n - 2);
-    prlongf("Total number of elements                 : %d\n", n * n);
-    prlongf("Total number of inner elements           : %d\n", (n - 2) * (n - 2));
-    prlongf("Memory (GB) used per array               : %.5f\n",
+    printf("Number of threads                        : %d\n", threads);
+    printf("Number of elements in a row/column       : %d\n", n);
+    printf("Number of inner elements in a row/column : %d\n", n - 2);
+    printf("Total number of elements                 : %d\n", n * n);
+    printf("Total number of inner elements           : %d\n", (n - 2) * (n - 2));
+    printf("Memory (GB) used per array               : %.5f\n",
            sizeof(float) * n * n / (float) (1024 * 1024 * 1024));
-    prlongf("Threshold                                : %.2f\n", t);
-    prlongf("Smoothing constants (a, b, c)            : %.2f %.2f %.2f\n", a, b, c);
-    prlongf("Number of elements below threshold (X)   : %d\n", count_x);
-    prlongf("Fraction of elements below threshold     : %f\n", (float) count_x / (float) (n * n));
-    prlongf("Number of elements below threshold (Y)   : %d\n", count_y);
-    prlongf("Fraction of elements below threshold     : %f\n", (float) count_y / (float) (n * n));
+    printf("Threshold                                : %.2f\n", t);
+    printf("Smoothing constants (a, b, c)            : %.2f %.2f %.2f\n", a, b, c);
+    printf("Number of elements below threshold (X)   : %d\n", count_x);
+    printf("Fraction of elements below threshold     : %f\n", (float) count_x / (float) (n * n));
+    printf("Number of elements below threshold (Y)   : %d\n", count_y);
+    printf("Fraction of elements below threshold     : %f\n", (float) count_y / (float) (n * n));
     std::cout << "-----\n";
 
 
     double resolution = (double) std::chrono::high_resolution_clock::period::num
                         / std::chrono::high_resolution_clock::period::den;
-    prlongf("Functions   --    Time [s]  --  Resolution = %.2E\n", resolution);
-    prlongf("Alloc-X     --    %f\n", alloc_x);
-    prlongf("Alloc-Y     --    %f\n", alloc_y);
-    prlongf("Init-X      --    %f\n", init_x);
-    prlongf("Smooth      --    %f\n", smooth_time);
-    prlongf("Count-X     --    %f\n", count_x_time);
-    prlongf("Count-Y     --    %f\n", count_y_time);
+    printf("Functions   --    Time [s]  --  Resolution = %.2E\n", resolution);
+    printf("Alloc-X     --    %f\n", alloc_x);
+    printf("Alloc-Y     --    %f\n", alloc_y);
+    printf("Init-X      --    %f\n", init_x);
+    printf("Smooth      --    %f\n", smooth_time);
+    printf("Count-X     --    %f\n", count_x_time);
+    printf("Count-Y     --    %f\n", count_y_time);
 
 }
